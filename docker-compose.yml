@@ -1,0 +1,27 @@
+services:
+  db:
+    image: pst001.azurecr.io/db
+    build:
+      context: .
+      dockerfile: src/main/resources/Dockerfile
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_DATABASE: 'student'
+      MYSQL_USER: 'app'
+      MYSQL_PASSWORD: 'admin'
+    ports:
+      - '3306:3306'
+  backend:
+    image: pst001.azurecr.io/backend
+    build:
+      context: .
+    container_name: backend
+    restart: on-failure
+    ports:
+      - '7000:7000'
+    depends_on:
+      - db
+    links:
+      - db
